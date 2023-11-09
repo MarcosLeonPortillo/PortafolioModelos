@@ -32,15 +32,6 @@ class Producto(models.Model):
         verbose_name_plural = "Productos"
 
 
-
-class User(models.Model):
-    vip = models.BooleanField(default=False)
-    saldo = models.IntegerField()
-   
-
-
-
-
 class Cliente(models.Model):
     user= models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     saldo=models.DecimalField(max_digits=12, decimal_places=2)
@@ -62,7 +53,7 @@ class Compra(models.Model):
     iva =models.DecimalField(max_digits=12, decimal_places=2, default=0.21)
 
     def __str__(self):
-        return f'{self.user.username} {self.fecha}'
+        return f'{self.user.user.username} {self.fecha}'
     
     class Meta:
         unique_together=['fecha','producto','user']
