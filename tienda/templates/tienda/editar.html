@@ -2,7 +2,8 @@
 
 {% block content %}
 	{% for producto in Productos %}
-	Nombre: {{% producto.Nombre %}}
-	Modelo: {{% producto.Modelo %}} 
+	Nombre: {{ producto.nombre }}
+	Modelo: {{ producto.modelo }} <br> <br> 
 	{% endfor %}
+
 {% endblock %}

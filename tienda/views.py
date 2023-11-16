@@ -10,25 +10,21 @@ def welcome(request):
 
 
 
-
-
 def admin(request):
-    Productos = Producto.objects.all()
-    return render(request, 'tienda/Productos.html', {})
+    Productos = Producto.objects.filter()
+    return render(request, 'tienda/Productos.html', {'Productos': Productos})
 
-def editar(request):
+def editar(request, pk):
     Productos = Producto.objects.all()
-    return render(request, 'tienda/editar.html', {})
+    return render(request, 'tienda/editar.html', {'Productos': Productos})
 
 def eliminar(request):
-    Productos = Producto.objects.all()
+    Productos = Producto.objects.all()                                              
     return render(request, 'tienda/editar.html', {})
 
 def nuevo(request):
     Productos = Producto.objects.all()
     return render(request, 'tienda/nuevo.html', {})
-
-
 
 
 

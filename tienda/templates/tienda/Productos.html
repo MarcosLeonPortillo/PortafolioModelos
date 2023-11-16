@@ -2,9 +2,11 @@
 
 {% block content %}
 	{% for producto in Productos %}
-	Nombre: {{% producto.nombre %}}
-	Modelo: {{% producto.modelo %}} <a href="editar.html">Editar Productos</a>
+	Nombre: {{ producto.nombre }}
+	Modelo: {{ producto.modelo }} <br> <br> 
 	{% endfor %}
+	<a href="{% url 'editar' pk=1 %}"> Editar producto </a>
+
 {% endblock %}
 
 
