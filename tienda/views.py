@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Producto
 from .models import Compra
-from django.shortcuts import get_object_or_404
 from .models import Marca
+from .forms import cambiarProducto
 
 # Create your views here.
 
@@ -15,26 +15,36 @@ def admin(request):
     Productos = Producto.objects.filter()
     return render(request, 'tienda/Productos.html', {'Productos': Productos})
 
+
 def editar(request, pk):
-    Productos = get_object_or_404(Producto, pk=pk)
+    producto = get_object_or_404(Producto, pk=pk)
     if request.method == "POST":
-        form = PostForm(request.POST, instance=Producto)
+        form = cambiarProducto(request.POST, instance=producto)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.published_date = timezone.now()
-            post.save()
-            return redirect('editar', pk=post.pk)
+            producto = form.save(commit=False)
+            producto.save()
+            return redirect('productos')
     else:
-        form = PostForm(instance=Producto)
-    return render(request, 'tienda/editar.html', {'Productos': Productos})
-def eliminar(request):
-    Productos = Producto.objects.all()                                              
-    return render(request, 'tienda/editar.html', {})
+        form = cambiarProducto(instance=producto)
+    return render(request, 'tienda/editar.html', {'form': form, 'pk':pk})
+
+
+
+def eliminar(request, pk):
+    producto=Producto.objects.filter(pk=pk).delete() 
+    return redirect('productos')
+
 
 def nuevo(request):
-    Productos = Producto.objects.all()
-    return render(request, 'tienda/nuevo.html', {})
+    if request.method == 'POST':
+        form = cambiarProducto(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('productos')
+    else:
+        form = cambiarProducto()
+    
+    return render(request, 'tienda/nuevo.html', {'form': form})
 
 
 
