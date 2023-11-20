@@ -1,33 +1,39 @@
-import random
+# Importamos la funcion render, la clase TableroForm y las clases Casilla y tablero
 from django.shortcuts import render
 from .forms import TableroForm
-from  .tablero import Casilla, Tablero
+from .Buscaminas import Casilla, Tablero
 
-def index2(request):
-    return render(request, 'tablero/index2.html', {})
+# Definimos la vista index que renderiza la plantilla 'index.html'.
+def index(request):
+    return render(request, 'tablero/index.html', {})
 
+# Definimos la vista para manejar la creación y visualización de los tableros.
 def tablero(request):
+
     tablero = None
 
+    # Verificamos si la solicitud es un post cuando se envía el formulario.
     if request.method == 'POST':
         form = TableroForm(request.POST)
 
+        # Verificamos si el formulario es válido.
         if form.is_valid():
+            # Obtenemos los datos ingresados en el formulario.
             filas = form.cleaned_data['filas']
             columnas = form.cleaned_data['columnas']
             num_minas = form.cleaned_data['num_minas']
 
-            total_casillas = filas * columnas
+                # Generamos el tablero con las minas.
+            tablero = Tablero(filas, columnas, num_minas).mostrarTablero()
 
-            if num_minas <= total_casillas / 2:
-                # Crea una instancia de Tablero y genera el tablero con minas
-                tablero = Tablero(filas, columnas, num_minas).mostrar_tablero()
-
+    # Si la solicitud no es un POST, o el formulario no es válido,
+    # crea una instancia del formulario 'TableroForm' para ser utilizado en la plantilla.
     else:
         form = TableroForm()
 
-    if tablero is not None:
-        return render(request, 'tablero/index.html', {'form': form, 'tablero': tablero})
+    # Si se genera un tablero, renderiza la plantilla 'muestra_tablero.html' con el formulario y el tablero.
+    if tablero:
+        return render(request, 'tablero/muestra_tablero.html', {'form': form, 'tablero': tablero})
+    # Si no se genera un tablero, renderiza la plantilla 'crea_tablero.html' con el formulario.
     else:
-        return render(request, 'tablero/tablero_create.html', {'form': form})
-
+        return render(request, 'tablero/crea_tablero.html', {'form': form})
